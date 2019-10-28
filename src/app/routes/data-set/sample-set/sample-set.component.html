@@ -1,0 +1,86 @@
+<div class="mb-md sample-set">
+    <button class="add-btn" nz-button (click)="createModal('添加样本集',modalTpl,false)" [nzType]="'primary'">添加样本集</button>
+    <div class="search-box">
+        <input nz-input (keydown.enter)="getSampleSetList()" [(ngModel)]="keyWord" name="name" placeholder="请输入关键字"
+            style="width: 200px;" class="mr-sm">
+        <button nz-button (click)="getSampleSetList()" [nzType]="'primary'">搜索</button>
+    </div>
+</div>
+<st #st [data]="pageData" [columns]="columns" [page]="page" [bordered]="true" [pi]="pageIndex" [total]="total" (change)="getSampleSetList($event)"></st>
+<ng-template #modalTpl>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">
+                    样本库类型
+            </nz-form-label>
+            <nz-select class="sampleSet_input"[disabled]="isEdit" [(ngModel)]="sampleSetParam.warehouse_type">
+                <nz-option *ngFor="let t of datasetType" [nzValue]="t" [nzLabel]="t"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">URL</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" nz-input placeholder="数据源Url" [(ngModel)]="sampleSetParam.sample_link" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='Mysql'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">端口</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" nz-input placeholder="数据库端口" [(ngModel)]="sampleSetParam.databasePort" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='Mysql'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据库用户</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" nz-input placeholder="请输入数据库用户名" [(ngModel)]="sampleSetParam.username" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='Mysql'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据库密码</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" type="password" nz-input placeholder="请输入数据库密码" [(ngModel)]="sampleSetParam.password" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='Mysql'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据库名称</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" nz-input placeholder="请输入数据库名称" [(ngModel)]="sampleSetParam.dbname" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='Mysql'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据表名称</nz-form-label>
+            <input class="sampleSet_input" [disabled]="isEdit" nz-input placeholder="请输入数据表名称" [(ngModel)]="sampleSetParam.dbTable" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="sampleSetParam.warehouse_type=='HDFS'">
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">Schema</nz-form-label>
+            <input class="sampleSet_input" nz-input placeholder="Schema" [(ngModel)]="sampleSetParam.Schema" />
+            <button style="margin-left: 10px;" nz-button nzType="primary">上传Schema</button>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">样本集名称</nz-form-label>
+            <input class="sampleSet_input" nz-input placeholder="请输入样本集名称" [(ngModel)]="sampleSetParam.data_name" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据类型</nz-form-label>
+            <nz-select class="sampleSet_input" [disabled]="isEdit" [(ngModel)]="sampleSetParam.sample_lable">
+                <nz-option *ngFor="let t of dataTypeList" [nzValue]="t.key" [nzLabel]="t.name"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label class="sampleSet_label">数据格式</nz-form-label>
+            <nz-select class="sampleSet_input" [disabled]="isEdit" [(ngModel)]="sampleSetParam.data_format">
+                <nz-option *ngFor="let t of dataFormatList" [nzValue]="t" [nzLabel]="t" ></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+</ng-template>

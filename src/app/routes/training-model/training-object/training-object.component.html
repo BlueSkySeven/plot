@@ -1,0 +1,115 @@
+<div class="mb-md project-search">
+    <div>
+        <button nz-button (click)="setTreeInfo({ isSelect:false });
+        add('创建训练对象',actionTpl,addObject);   
+        this.trainingTitle = null;
+        this.trainList = null;
+        this.trainingFlow = null;" [nzType]="'primary'">创建训练对象</button>
+        <nz-divider nzType="vertical"></nz-divider>
+        <span [hidden]="!(inputValue&&inputValue.name)">
+            <nz-tag [nzColor]="'red'" nzMode="closeable"
+                (nzOnClose)="preventDefault($event);inputValue.name=null;getTrainList();clearProject()">
+                当前项目:{{inputValue.name}}
+            </nz-tag>
+        </span>
+    </div>
+    <div *ngIf="awaitSlow">
+        <nz-spin nzSimple></nz-spin>
+    </div>
+    <div>
+        <nz-input-group [nzSuffix]="suffixTemplate">
+            <input nz-input (keydown.enter)="getTrainList()" [(ngModel)]="keyWord" name="name" placeholder="请输入训练对象名称"
+                style="width: 200px;" class="mr-sm">
+        </nz-input-group>
+        <ng-template #suffixTemplate>
+            <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="keyWord"
+                (click)="keyWord = null;getTrainList();keyWord=''"></i>
+        </ng-template>
+        <button nz-button (click)="getTrainList()" [nzType]="'primary'">搜索</button>
+    </div>
+</div>
+<st #st [data]="pageData" [columns]="columns" [loading]="isLoading" (change)="getTrainList($event)" [page]="page"
+    [bordered]="true" [pi]="pageIndex" [total]="total">
+</st>
+<!-- 创建训练对象弹窗 -->
+<ng-template #actionTpl>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label nzFor="no">
+                训练对象名称
+            </nz-form-label>
+            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="trainingTitle" name="project_title"
+                placeholder="请输入" id="no" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <div style="display: flex">
+                <nz-form-label nzFor="no">
+                    <span class="mar-l-42">
+                        训练集
+                    </span>
+                </nz-form-label>
+                <app-load-select [selectOption]="trainingObj" (selected)="selectedProject=$event" style="width: 300px">
+                </app-load-select>
+            </div>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <div style="display: flex">
+                <nz-form-label nzFor="no">
+                    <span class="mar-l-42">
+                        分析流
+                    </span>
+                </nz-form-label>
+                <app-load-flow-select [selectOption]="flowObj" (selected)="flowResult=$event" style="width: 300px">
+                </app-load-flow-select>
+                <!-- <div *ngIf="false else flowAction"></div> -->
+            </div>
+        </nz-form-control>
+    </nz-form-item>
+</ng-template>
+
+<!-- 关联项目弹窗 -->
+<ng-template #actionTplProject>
+    <nz-form-item>
+        <ng-container *ngFor="let item of alreadyProjectArr;let i=index">
+            <nz-form-control>
+                <nz-form-label nzFor="no">
+                    <span class="mar-l-15">
+                        已经关联
+                    </span>
+                </nz-form-label>
+                <input readonly style="width: 300px;" maxlength="20"
+                    value={{copyTarget.training_title}}---{{item.project_title}} nz-input name="project_title"
+                    placeholder="请输入" id="no" />
+                <button title="删除关联" (click)="releaseRelation(item.id,i)" nz-button><i nz-icon nzType="delete"
+                        nzTheme="outline"></i></button>
+            </nz-form-control>
+        </ng-container>
+        <nz-form-control>
+            <div style="display: flex">
+                <nz-form-label nzFor="no">
+                    <span class="mar-l-15">
+                        关联项目
+                    </span>
+                </nz-form-label>
+                <app-load-select [selectOption]="relationObj" (selected)="selectedProject=$event" style="width: 300px">
+                </app-load-select>
+            </div>
+        </nz-form-control>
+    </nz-form-item>
+</ng-template>
+
+<!-- 分析流解决方案 -->
+<ng-template #flowAction>
+    <div>
+        <nz-divider nzText="创建解决方案" nzOrientation="left"></nz-divider>
+        <button nz-button nzType="primary" nzBlock>创建</button>
+        <nz-divider nzText="历史解决方案" nzOrientation="left"></nz-divider>
+        <st #st [data]="pageData" [columns]="flowColumns" [page]="page" [bordered]="true" [pi]="pageIndex"
+            [total]="total" (change)="getTrainList($event)">
+        </st>
+    </div>
+</ng-template>

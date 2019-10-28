@@ -1,0 +1,9 @@
+<nz-select (ngModelChange)="ngModelChange($event)" style="width: 100%;" [(ngModel)]="selectedValue"
+    (nzScrollToBottom)="loadMore()" (nzOnSearch)="onSearch($event)" nzPlaceHolder={{selectOption.placeHolder}}
+    nzShowSearch [nzServerSearch]="true" nzAllowClear>
+    <nz-option *ngFor="let o of optionList" [nzDisabled]="disabledOption(o.key)" [nzValue]="o.id" [nzLabel]="o.key">
+    </nz-option>
+    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+        <i nz-icon nzType="loading" class="loading-icon"></i> Loading Data...
+    </nz-option>
+</nz-select>

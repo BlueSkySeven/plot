@@ -1,0 +1,42 @@
+<div class="mb-md project-search">
+    <button nz-button (click)="add('创建项目',actionTpl,addObject);
+    this.projectTitle = null;
+    this.projectComment = null;
+    this.estimatedTime = null;" [nzType]="'primary'">创建项目</button>
+    <div>
+        <nz-input-group [nzSuffix]="suffixTemplate">
+            <input nz-input (keydown.enter)="getProjectList()" [(ngModel)]="keyWord" name="name" placeholder="请输入项目名称"
+                style="width: 200px;" class="mr-sm">
+        </nz-input-group>
+        <ng-template #suffixTemplate>
+            <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="keyWord"
+                (click)="keyWord = null;getProjectList();keyWord=''"></i>
+        </ng-template>
+        <button nz-button (click)="getProjectList()" [nzType]="'primary'">搜索</button>
+    </div>
+</div>
+<st #st [data]="pageData" [columns]="columns" [loading]="isLoading" (change)="getProjectList($event)" [page]="page"
+    [bordered]="true" [pi]="pageIndex" [total]="total"></st>
+<!-- 弹窗 -->
+<ng-template #actionTpl>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label nzFor="no">项目名称</nz-form-label>
+            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectTitle" name="project_title"
+                placeholder="请输入" id="no" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label nzFor="no">项目描述</nz-form-label>
+            <textarea style="width: 300px;" maxlength="140" nz-input [(ngModel)]="projectComment" id="remark"
+                name="remark" [nzAutosize]="true" placeholder="请输入"></textarea>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label nzFor="no">预计完成</nz-form-label>
+            <nz-date-picker [(ngModel)]="estimatedTime"></nz-date-picker>
+        </nz-form-control>
+    </nz-form-item>
+</ng-template>

@@ -16,14 +16,11 @@
 <div class="mb-md project-search">
     <div>
     <button nz-button [nzType]="'primary'" (click)="deleteObject('array')">批量删除</button>
-    <button nz-button (click)="add('创建项目',this.currentIndex,addObject);
-    this.projectTitle = null;
-    this.projectComment = null;
-    this.estimatedTime = null;" [nzType]="'primary'">创建项目</button>
+    <button nz-button (click)="add('创建规则',this.currentIndex,addObject);" [nzType]="'primary'">创建规则</button>
     </div>
     <div>
         <nz-input-group [nzSuffix]="suffixTemplate">
-            <input nz-input (keydown.enter)="getList('select')" [(ngModel)]="keyWord" name="name" placeholder="请输入id精确查找"
+            <input nz-input (keydown.enter)="getList('select')" [(ngModel)]="keyWord" name="name" placeholder="请输入ruletype精确查找"
                 style="width: 200px;" class="mr-sm">
         </nz-input-group>
         <ng-template #suffixTemplate>
@@ -42,35 +39,43 @@
 
 <st #st [data]="pageData" [columns]="columns" [loading]="isLoading" 
     [page]="page" (change)="changePageData($event)"
+    multiSort
     [bordered]="true" [pi]="pageIndex" [total]="total"></st>
 <!-- 弹窗 -->
 <ng-template #actionTpl>
     <nz-form-item>
         <nz-form-control>
-            <nz-form-label nzFor="no">projectRuletype</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
                 placeholder="请输入" id="no" />
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
         <nz-form-control>
-            <nz-form-label nzFor="no">projectIndicator</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Indicator</nz-form-label>
             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectIndicator" id="projectIndicator"
                 name="projectIndicator" placeholder="请输入"/>
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
         <nz-form-control>
-            <nz-form-label nzFor="no">projectValue</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Value</nz-form-label>
             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectValue" id="projectValue"
             name="projectValue"  placeholder="请输入"/>
         </nz-form-control>
     </nz-form-item>
     <nz-form-item>
         <nz-form-control>
-            <nz-form-label nzFor="no">projectUproto</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Uproto</nz-form-label>
             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectUproto" id="projectUproto"
             name="projectUproto" placeholder="请输入"/>
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
+            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
+            name="projectRemark" placeholder="请输入"/>
         </nz-form-control>
     </nz-form-item>
 </ng-template>
@@ -78,30 +83,37 @@
 <ng-template #actionTpl2>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectRuletype</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
                     placeholder="请输入" id="no" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">proto</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">proto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectProto" id="proto"
                     name="proto" placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectKey</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Key</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectKey" id="projectKey"
                 name="projectKey"  placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectUproto</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Uproto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectUproto" id="projectUproto"
                 name="projectUproto" placeholder="请输入"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
+                <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
+                name="projectRemark" placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
     </ng-template>
@@ -109,44 +121,51 @@
 <ng-template #actionTpl3>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectRuletype</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
                     placeholder="请输入" id="no" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectProto</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Proto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectProto" id="projectProto"
                     name="projectProto" placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label nzFor="no">projectOffset</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Offset</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectOffset" id="projectOffset"
                         name="projectOffset" placeholder="请输入"/>
                 </nz-form-control>
         </nz-form-item>
         <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label nzFor="no">projectLength</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Length</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectLength" id="projectProto"
                         name="projectLength" placeholder="请输入"/>
                 </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectValue</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Value</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectValue" id="projectValue"
                 name="projectValue"  placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectUproto</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Uproto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectUproto" id="projectUproto"
                 name="projectUproto" placeholder="请输入"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
+                <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
+                name="projectRemark" placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
     </ng-template>
@@ -154,16 +173,23 @@
 <ng-template #actionTpl4>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectRuletype</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
                     placeholder="请输入" id="no" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <nz-form-label nzFor="no">projectProto</nz-form-label>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Proto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectProto" id="projectProto"
                     name="projectProto" placeholder="请输入"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
+                <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
+                name="projectRemark" placeholder="请输入"/>
             </nz-form-control>
         </nz-form-item>
     </ng-template>
@@ -171,16 +197,23 @@
     <ng-template #actionTpl5>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label nzFor="no">projectRuletype</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
                         placeholder="请输入" id="no" />
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label nzFor="no">projectTuples</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Tuples</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectTuples" id="projectTuples"
                         name="projectTuples" placeholder="请输入"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
+                    <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
+                    name="projectRemark" placeholder="请输入"/>
                 </nz-form-control>
             </nz-form-item>
 </ng-template>

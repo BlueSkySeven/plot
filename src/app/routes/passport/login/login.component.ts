@@ -41,7 +41,6 @@ export class UserLoginComponent implements OnDestroy {
   }
 
   // #region fields
-
   get userName() {
     return this.form.controls.userName;
   }
@@ -83,43 +82,17 @@ export class UserLoginComponent implements OnDestroy {
       }
     }, 1000);
   }
-
-  // #endregion
-
-  submit() {
-    this.error = '';
-    if (this.type === 0) {
-      this.userName.markAsDirty();
-      this.userName.updateValueAndValidity();
-      this.password.markAsDirty();
-      this.password.updateValueAndValidity();
-      if (this.userName.invalid || this.password.invalid) {
-        return;
-      }
-    } else {
-      this.mobile.markAsDirty();
-      this.mobile.updateValueAndValidity();
-      this.captcha.markAsDirty();
-      this.captcha.updateValueAndValidity();
-      if (this.mobile.invalid || this.captcha.invalid) {
-        return;
+  ngOnInit() {
+    let res: any={
+      user:{
+        avatar: "https://cn.bing.com/th?id=OHR.HardeeCoFair_ZH-CN8647295545_1920x1080.jpg&rf=LaDigue_1920x1080.jpg",
+        email: "111@qq.com",
+        id: 1,
+        name: "xiaoming",
+        time: 1572318576876,
+        token: "123456789",
       }
     }
-
-    // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
-    // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
-    // account?_allow_anonymous=true
-    this.http
-      .post('auth/login', {
-        type: this.type,
-        userName: this.userName.value,
-        passWord: this.password.value,
-      })
-      .subscribe((res: any) => {
-        if (res.msg !== 'ok') {
-          this.error = res.msg;
-          return;
-        }
         // 清空路由复用信息
         this.reuseTabService.clear();
         // 设置用户Token信息
@@ -131,10 +104,60 @@ export class UserLoginComponent implements OnDestroy {
             url = '/';
           }
           this.settingsService.setUser(res.user);
-          this.router.navigateByUrl(url);
+          this.router.navigateByUrl("rules-manager");
         });
-      });
   }
+  // #endregion
+  submit(){
+    // this.error = '';
+    // if (this.type === 0) {
+    //   this.userName.markAsDirty();
+    //   this.userName.updateValueAndValidity();
+    //   this.password.markAsDirty();
+    //   this.password.updateValueAndValidity();
+    //   if (this.userName.invalid || this.password.invalid) {
+    //     return;
+    //   }
+    // } else {
+    //   this.mobile.markAsDirty();
+    //   this.mobile.updateValueAndValidity();
+    //   this.captcha.markAsDirty();
+    //   this.captcha.updateValueAndValidity();
+    //   if (this.mobile.invalid || this.captcha.invalid) {
+    //     return;
+    //   }
+    // }
+
+    // // 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
+    // // 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
+    // // account?_allow_anonymous=true
+    // this.http
+    //   .post('auth/login', {
+    //     type: this.type,
+    //     userName: this.userName.value,
+    //     passWord: this.password.value,
+    //   })
+    //   .subscribe((res: any) => {
+    //     if (res.msg !== 'ok') {
+    //       this.error = res.msg;
+    //       return;
+    //     }
+    //     // 清空路由复用信息
+    //     this.reuseTabService.clear();
+    //     // 设置用户Token信息
+    //     this.tokenService.set(res.user);
+    //     // 重新获取 StartupService 内容，我们始终认为应用信息一般都会受当前用户授权范围而影响
+    //     this.startupSrv.load().then(() => {
+    //       let url = this.tokenService.referrer!.url || '/';
+    //       if (url.includes('/passport')) {
+    //         url = '/';
+    //       }
+    //       this.settingsService.setUser(res.user);
+    //       this.router.navigateByUrl(url);
+    //     });
+    //   });
+  }
+
 
   // #region social
 

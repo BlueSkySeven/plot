@@ -5,16 +5,16 @@
 	</div>
 
 	<div>
-		<input nz-input (keydown.enter)="getTraintList({kW:true})" [(ngModel)]="keyWord" name="name"
+		<!-- <input nz-input (keydown.enter)="getTraintList({kW:true})" [(ngModel)]="keyWord" name="name"
 			placeholder="请输入训练集标签关键字" style="width: 200px;" class="mr-sm">
-		<button nz-button (click)="getTraintList({kW:true})" [nzType]="'primary'">搜索</button>
+		<button nz-button (click)="getTraintList({kW:true})" [nzType]="'primary'">搜索</button> -->
 	</div>
 </div>
 <st #st [data]="pageData" [columns]="columns" [page]="page" [bordered]="true" [pi]="pageIndex" [total]="total"
 	(change)="getTraintList($event)"></st>
 <!-- 弹窗 -->
 <ng-template #contTpl>
-	<div *ngIf="step=='1'">
+	<!-- <div *ngIf="step=='1'">
 		<div class="top">
 			<st #st2 [data]="sampleSetList" [columns]="sampleSetcolumns" [page]="samplePageConf.page" [bordered]="true"
 				[pi]="samplePageConf.pageIndex" [ps]="samplePageConf.pageSize" [total]="samplePageConf.total" (change)="handleStChange($event)"></st>
@@ -54,12 +54,12 @@
 			</nz-form-item>
 		</div>
 
-	</div>
+	</div> -->
 
 </ng-template>
 <ng-template #footTpl>
-	<button nz-button nzType="default" *ngIf="step=='1'" (click)='closeModel()'>取消</button>
+	<!-- <button nz-button nzType="default" *ngIf="step=='1'" (click)='closeModel()'>取消</button>
 	<button nz-button nzType="primary" *ngIf="step=='1'" [disabled]='selectedSchemaList.length==0' (click)='goStep(2)'>下一步</button>
 	<button nz-button nzType="primary" *ngIf="step=='2'" (click)='goStep(1)'>上一步</button>
-	<button nz-button nzType="primary" *ngIf="step=='2'" (click)='savaClick()'>完成</button>
+	<button nz-button nzType="primary" *ngIf="step=='2'" (click)='savaClick()'>完成</button> -->
 </ng-template>

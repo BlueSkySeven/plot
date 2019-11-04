@@ -109,9 +109,9 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
   ];
   columns2: STColumn[] = [
     { title: "编号", index: "id" },
-    { title: "oui", index: "oui" },
-    { title: "supplier", index: "supplier" },
-    { title: "timestamp", index: "timestamp" },
+    { title: "OUI", index: "oui" },
+    { title: "厂商名称", index: "supplier" },
+    { title: "时间戳", index: "timestamp" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -203,27 +203,12 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       }
     }
   }
-  getTotal(){
-    let tableName = ""
-    if(this.currentIndex == 0){
-      tableName = "ip"
-    }
-    else{
-      tableName = "mac"
-    }
-    this.proSrv.getAllListInfoPost('http://192.168.21.6:3001/getSingleTable', {
-      dbname:"knowledge_management",
-      tablename: tableName,
-    })
-    .subscribe(data => {
-      this.total = data['allCount']
-    }, error => {
-    });
-  }
   getList(str : string){
+    this.isLoading = true;
     let dbname = {}
     if(str == 'select'){
       if(!this.keyWord){
+        this.getList('query')
         return
       }
       dbname = {
@@ -254,17 +239,15 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
         tablename: "mac",
       };
     }
-    this.isLoading = true;
     var _this = this
     return new Promise(function(){
       _this.pageData = []
-      _this.proSrv.getAllListInfoPost('http://192.168.21.6:3001/getSingleTable', param)
+      _this.proSrv.getAllListInfoPost(UtilStatic.host+'getSingleTable', param)
       .subscribe(data => {
         _this.isLoading = false;
         _this.dataList = data
         _this.total = str == 'select' ? data['data'].length : data['allCount'];
         _this.pageData = data['data'] || []
-        // _this.getTotal()
       }, error => {
         _this.isLoading = false;
       });
@@ -276,7 +259,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
    * 新建项目弹窗
    */
   add(nzTitle: string, tpl: number, callBack: any): void {
-    if(nzTitle == "创建项目"){
+    if(nzTitle == "创建知识库"){
       this.ipv4beg = null;
       this.ipv4end = null;
       this.ip_begins = null;
@@ -351,7 +334,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.addInfoPost('http://192.168.21.6:3001/addData', param)
+    this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         this.isLoading = false;
         console.log(data,"data")
@@ -426,7 +409,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.editInfoPost('http://192.168.21.6:3001/updateData', param)
+    this.proSrv.editInfoPost(UtilStatic.host+'updateData', param)
       .subscribe(data => {
         this.isLoading = false;
         if (!data['affectedRows']) {
@@ -480,12 +463,13 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.deleteInfoPost('http://192.168.21.6:3001/deleteData', param).subscribe(data => {
+    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(data => {
       this.isLoading = false;
       if (!data['affectedRows']) {
         this.message.error('删除失败');
         return;
       }
+      this.pageIndex = 1
       this.message.success('删除成功');
       this.getList('query');
     }, error => {

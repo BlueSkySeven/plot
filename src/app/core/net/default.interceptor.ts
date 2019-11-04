@@ -87,10 +87,11 @@ export class DefaultInterceptor implements HttpInterceptor {
         // }
         break;
       case 401:
-        this.notification.error(`未登录或登录已过期，请重新登录。`, ``);
+        //this.notification.error(`未登录或登录已过期，请重新登录。`, ``);
         // 清空 token 信息
         (this.injector.get(DA_SERVICE_TOKEN) as ITokenService).clear();
-        this.goTo('/passport/login');
+        //this.goTo('/passport/login');
+        //暂时先无登录功能
         break;
       case 403:
       case 404:

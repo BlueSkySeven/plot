@@ -36,7 +36,7 @@ const routes: Routes = [
     component: LayoutDefaultComponent,
     canActivate: [SimpleGuard],
     children: [
-      { path: '', redirectTo: '/tasks-manager', pathMatch: 'full' },
+      { path: '', redirectTo: '/rules-manager', pathMatch: 'full' },
       { path: 'dashboard', redirectTo: 'dashboard/analysis', pathMatch: 'full' },
       { path: 'dashboard/analysis', component: DashboardAnalysisComponent || DashboardV1Component },
       { path: 'dashboard/analysis', component: DashboardAnalysisComponent },

@@ -44,6 +44,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   projectOffset: string;
   projectLength: string;
   projectTuples:string;
+  projectRemark:string;
   projectRecord: any;
   treenodes = [];
   isLoading: boolean;
@@ -61,6 +62,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "indicator", index: "indicator" },
     { title: "value", index: "value" },
     { title: "uproto", index: "uproto" },
+    { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -71,6 +73,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.itemDetail = record
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectRemark = record.remark;
           this.projectIndicator = record.indicator;
           this.projectValue = record.value;
           this.projectUproto = record.uproto;
@@ -97,6 +100,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "proto", index: "proto" },
     { title: "key_", index: "key_" },
     { title: "uproto", index: "uproto" },
+    { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -106,6 +110,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectRemark = record.remark;
           this.projectProto = record.proto;
           this.projectKey = record.key_;
           this.projectUproto = record.uproto;
@@ -134,6 +139,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "length", index: "length" },
     { title: "value", index: "value" },
     { title: "uproto", index: "uproto" },
+    { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -143,6 +149,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectRemark = record.remark;
           this.projectProto = record.proto;
           this.projectValue = record.value;
           this.projectUproto = record.uproto;
@@ -169,6 +176,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype" },
     { title: "proto", index: "proto" },
+    { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -178,6 +186,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectRemark = record.remark;
           this.projectProto = record.proto;
           this.add('编辑', 3, this.editObject);
         }
@@ -200,6 +209,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype" },
     { title: "tuples", index: "tuples" },
+    { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -209,6 +219,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectRemark = record.remark;
           this.projectTuples = record.tuples;
           this.add('编辑', 4, this.editObject);
         }
@@ -255,8 +266,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     this.currentIndex = 0
     this.columns = this.columns1
     this.getList("query");
-
-
   }
 
   /**
@@ -309,15 +318,17 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     }
   }
   getList(str :string){
+    this.isLoading = true;
     let dbname = {}
     if(str == 'select'){
       if(!this.keyWord){
+        this.getList('query')
         return
       }
       dbname = {
         dbname:"rule_management",
         filter:[
-          {id:this.keyWord},
+          {ruletype:this.keyWord},
       ],
       }
     }
@@ -360,11 +371,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "sa",
       };
     }
-    this.isLoading = true;
     var _this = this
     return new Promise(function(){
       _this.pageData = []
-      _this.proSrv.getAllListInfoPost('http://192.168.21.6:3001/getSingleTable', param)
+      _this.proSrv.getAllListInfoPost(UtilStatic.host+'getSingleTable', param)
       .subscribe(data => {
         _this.isLoading = false;
         _this.dataList = data['data']
@@ -381,8 +391,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
    * 新建项目弹窗
    */
   add(nzTitle: string, tpl: number, callBack: any): void {
-    if(nzTitle == "创建项目"){
+    if(nzTitle == "创建规则"){
       this.projectRuletype = null;
+      this.projectRemark = null;
       this.projectIndicator = null;
       this.projectValue = null;
       this.projectUproto = null;
@@ -426,6 +437,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "ivr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           indicator : this.projectIndicator,
           value : this.projectValue,
           uproto : this.projectUproto,
@@ -438,6 +450,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "pkr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
           key_ : this.projectKey,
           uproto : this.projectUproto,
@@ -450,6 +463,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "polvr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
           value : this.projectValue,
           uproto : this.projectUproto,
@@ -464,6 +478,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "md",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
         }
       };
@@ -474,12 +489,13 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "sa",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           tuples : this.projectTuples,
         }
       };
     }
     this.isLoading = true;
-    this.proSrv.addInfoPost('http://192.168.21.6:3001/addData', param)
+    this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         this.isLoading = false;
         console.log(data,"data")
@@ -490,6 +506,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.message.success("添加成功");
         this.getList("query");
         this.projectRuletype = null;
+        this.projectRemark = null;
         this.projectProto = null;
         this.projectValue = null;
         this.projectUproto = null;
@@ -520,6 +537,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "ivr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           indicator : this.projectIndicator,
           value : this.projectValue,
           uproto : this.projectUproto,
@@ -532,6 +550,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "pkr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
           key_ : this.projectKey,
           uproto : this.projectUproto,
@@ -544,6 +563,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "polvr",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
           value : this.projectValue,
           uproto : this.projectUproto,
@@ -558,6 +578,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "md",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           proto : this.projectProto,
         }
       };
@@ -568,12 +589,13 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "sa",
         data:{
           ruletype : this.projectRuletype,
+          remark :this.projectRemark,
           tuples : this.projectTuples,
         }
       };
     }
     this.isLoading = true;
-    this.proSrv.editInfoPost('http://192.168.21.6:3001/updateData', param)
+    this.proSrv.editInfoPost(UtilStatic.host+'updateData', param)
       .subscribe(data => {
         this.isLoading = false;
         if (!data['affectedRows']) {
@@ -586,6 +608,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       })
       this.projectRuletype = null;
+      this.projectRemark = null,
       this.projectProto = null;
       this.projectValue = null;
       this.projectUproto = null;
@@ -651,13 +674,14 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.deleteInfoPost('http://192.168.21.6:3001/deleteData', param).subscribe(data => {
+    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(data => {
       this.isLoading = false;
       if (!data['affectedRows']) {
         this.message.error('删除失败');
         return;
       }
       this.message.success('删除成功');
+      this.pageIndex = 1
       this.getList("query");
     }, error => {
       this.isLoading = false;
@@ -679,6 +703,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
             indicator : item[1],
             value : item[2],
             uproto : item[3],
+            remark : item[4],
           }
         };
       }
@@ -691,6 +716,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
             proto : item[1],
             key_ : item[2],
             uproto : item[3],
+            remark : item[4],
           }
         };
       }
@@ -705,6 +731,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
             uproto : item[3],
             length : item[4],
             offset : item[5],
+            remark : item[6],
           }
         };
       }
@@ -715,6 +742,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           data:{
             ruletype : item[0],
             proto : item[1],
+            remark : item[2],
           }
         };
       }
@@ -725,10 +753,11 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           data:{
             ruletype : item[0],
             tuples : item[1],
+            remark : item[2],
           }
         };
       }
-      _this.proSrv.addInfoPost('http://192.168.21.6:3001/addData', param)
+      _this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         console.log(data,"data")
         if (!data['affectedRows']) {

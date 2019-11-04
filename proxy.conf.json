@@ -11,12 +11,6 @@
         "logLevel": "debug",
         "changeOrigin": true
     },
-    "/api2/*": {
-        "target": "http://192.168.21.6:3001/",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
     "/schema/*": {
         "target": "http://192.168.21.46:3000/",
         "secure": false,

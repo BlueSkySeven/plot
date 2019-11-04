@@ -16,13 +16,6 @@
       "hideInBreadcrumb": true,
       "children": [
         {
-          "text": "任务管理",
-          "icon": "anticon anticon-dot-chart",
-          "group": true,
-          "hideInBreadcrumb": true,
-          "link": "/tasks-manager"
-        },
-        {
           "text": "规则管理",
           "icon": "anticon anticon-dot-chart",
           "group": true,
@@ -35,20 +28,6 @@
           "group": true,
           "hideInBreadcrumb": true,
           "link": "/system-manager"
-        },
-        {
-          "text": "用户管理",
-          "icon": "anticon anticon-dot-chart",
-          "group": true,
-          "hideInBreadcrumb": true,
-          "link": "/users-manager"
-        },
-        {
-          "text": "运行状态监控",
-          "icon": "anticon anticon-dot-chart",
-          "group": true,
-          "hideInBreadcrumb": true,
-          "link": "/status-watcher"
         }
       ]
     }

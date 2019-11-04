@@ -17,7 +17,7 @@
         </nz-form-control>
       </nz-form-item>
     </nz-tab>
-    <nz-tab [nzTitle]="'app.login.tab-login-mobile' | translate">
+    <!-- <nz-tab [nzTitle]="'app.login.tab-login-mobile' | translate">
       <nz-form-item>
         <nz-form-control [nzErrorTip]="mobileErrorTip">
           <nz-input-group nzSize="large" nzPrefixIcon="user">
@@ -50,14 +50,14 @@
           </nz-row>
         </nz-form-control>
       </nz-form-item>
-    </nz-tab>
+    </nz-tab> -->
   </nz-tabset>
   <nz-form-item>
     <nz-col [nzSpan]="12">
       <label nz-checkbox formControlName="remember">{{ 'app.login.remember-me' | translate }}</label>
     </nz-col>
     <nz-col [nzSpan]="12" class="text-right">
-      <a class="forgot" (click)="msg.error('请找欧阳锋')">{{ 'app.login.forgot-password' | translate }}</a>
+      <a class="forgot" (click)="msg.error('未开发')">{{ 'app.login.forgot-password' | translate }}</a>
     </nz-col>
   </nz-form-item>
   <nz-form-item>
@@ -72,5 +72,6 @@
     class="icon"></i>
   <i nz-tooltip="in fact Github via redirect" (click)="open('github')" nz-icon nzType="taobao-circle" class="icon"></i>
   <i (click)="open('weibo', 'window')" nz-icon nzType="weibo-circle" class="icon"></i> -->
-  <a class="register" routerLink="/passport/register">{{ 'app.login.signup' | translate }}</a>
+  
+  <!-- <a class="register" routerLink="/passport/register">{{ 'app.login.signup' | translate }}</a> -->
 </div>

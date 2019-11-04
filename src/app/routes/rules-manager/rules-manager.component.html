@@ -20,7 +20,7 @@
     </div>
     <div>
         <nz-input-group [nzSuffix]="suffixTemplate">
-            <input nz-input (keydown.enter)="getList('select')" [(ngModel)]="keyWord" name="name" placeholder="请输入ruletype精确查找"
+            <input nz-input (keydown.enter)="getList('select')" [(ngModel)]="keyWord" name="name" placeholder="请输入id精确查找"
                 style="width: 200px;" class="mr-sm">
         </nz-input-group>
         <ng-template #suffixTemplate>
@@ -47,6 +47,13 @@
         <nz-form-control>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Ruletype</nz-form-label>
             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRuletype" name="projectRuletype"
+                placeholder="请输入" id="no" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Subtype</nz-form-label>
+            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectSubtype" name="projectSubtype"
                 placeholder="请输入" id="no" />
         </nz-form-control>
     </nz-form-item>
@@ -180,6 +187,13 @@
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
+                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Subtype</nz-form-label>
+                <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectSubtype" name="projectSubtype"
+                    placeholder="请输入" id="no" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
                 <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Proto</nz-form-label>
                 <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectProto" id="projectProto"
                     name="projectProto" placeholder="请输入"/>
@@ -214,6 +228,20 @@
                     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Remark</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectRemark" id="projectRemark"
                     name="projectRemark" placeholder="请输入"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Group</nz-form-label>
+                    <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectGroup" id="projectGroup"
+                        name="projectGroup" placeholder="请输入"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">Size</nz-form-label>
+                    <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="projectSize" id="projectSize"
+                    name="projectSize" placeholder="请输入"/>
                 </nz-form-control>
             </nz-form-item>
 </ng-template>

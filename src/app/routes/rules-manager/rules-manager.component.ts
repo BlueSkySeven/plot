@@ -45,6 +45,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   projectLength: string;
   projectTuples:string;
   projectRemark:string;
+  projectSubtype:string;
+  projectGroup:string;
+  projectSize:string;
   projectRecord: any;
   treenodes = [];
   isLoading: boolean;
@@ -59,6 +62,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype" },
+    { title: "subtype", index: "subtype" },
     { title: "indicator", index: "indicator" },
     { title: "value", index: "value" },
     { title: "uproto", index: "uproto" },
@@ -73,6 +77,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.itemDetail = record
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectSubtype = record.subtype;
           this.projectRemark = record.remark;
           this.projectIndicator = record.indicator;
           this.projectValue = record.value;
@@ -175,6 +180,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype" },
+    { title: "subtype", index: "subtype" },
     { title: "proto", index: "proto" },
     { title: "remark", index: "remark" },
     {
@@ -186,6 +192,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.projectRuletype = record.ruletype;
+          this.projectSubtype = record.subtype;
           this.projectRemark = record.remark;
           this.projectProto = record.proto;
           this.add('编辑', 3, this.editObject);
@@ -207,8 +214,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns5: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype" },
+    { title: "ruletype", index: "ruletype"},
     { title: "tuples", index: "tuples" },
+    { title: "group", index: "group" },
+    { title: "size", index: "size" },
     { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
@@ -221,6 +230,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRuletype = record.ruletype;
           this.projectRemark = record.remark;
           this.projectTuples = record.tuples;
+          this.projectGroup = record.group;
+          this.projectSize = record.size;
           this.add('编辑', 4, this.editObject);
         }
       }, {
@@ -328,8 +339,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       dbname = {
         dbname:"rule_management",
         filter:[
-          {ruletype:this.keyWord},
-      ],
+          {id:this.keyWord},
+      ]
       }
     }
     else{
@@ -397,6 +408,14 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       this.projectIndicator = null;
       this.projectValue = null;
       this.projectUproto = null;
+      this.projectProto = null;
+      this.projectKey = null;
+      this.projectOffset = null;
+      this.projectLength = null;
+      this.projectTuples = null;
+      this.projectGroup = null;
+      this.projectSize = null;
+      this.projectSubtype = null;
     }
     var tpl2: TemplateRef<{}>
     if(tpl == 0){
@@ -437,6 +456,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "ivr",
         data:{
           ruletype : this.projectRuletype,
+          subtype : this.projectSubtype,
           remark :this.projectRemark,
           indicator : this.projectIndicator,
           value : this.projectValue,
@@ -477,6 +497,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         ...dbname,
         tablename: "md",
         data:{
+          subtype: this.projectSubtype,
           ruletype : this.projectRuletype,
           remark :this.projectRemark,
           proto : this.projectProto,
@@ -491,6 +512,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           ruletype : this.projectRuletype,
           remark :this.projectRemark,
           tuples : this.projectTuples,
+          size :this.projectSize,
+          group : this.projectGroup,
         }
       };
     }
@@ -515,6 +538,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.projectIndicator = null;
         this.projectTuples = null;
         this.projectKey = null;
+        this.projectGroup = null;
+        this.projectSize = null;
+        this.projectSubtype = null;
       }, error => {
         this.isLoading = false;
       })
@@ -537,6 +563,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "ivr",
         data:{
           ruletype : this.projectRuletype,
+          subtype : this.projectSubtype,
           remark :this.projectRemark,
           indicator : this.projectIndicator,
           value : this.projectValue,
@@ -578,6 +605,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename: "md",
         data:{
           ruletype : this.projectRuletype,
+          subtype : this.projectSubtype,
           remark :this.projectRemark,
           proto : this.projectProto,
         }
@@ -591,6 +619,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           ruletype : this.projectRuletype,
           remark :this.projectRemark,
           tuples : this.projectTuples,
+          size :this.projectSize,
+          group : this.projectGroup,
         }
       };
     }
@@ -617,6 +647,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       this.projectIndicator = null;
       this.projectTuples = null;
       this.projectKey = null;
+      this.projectGroup = null;
+      this.projectSize = null;
+      this.projectSubtype = null;
   }
 
   /**

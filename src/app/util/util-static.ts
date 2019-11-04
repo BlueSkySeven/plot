@@ -2,8 +2,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { STPage } from '@delon/abc';
 // 表格数据
 const UtilStatic = {
-    // host: "rest/",
-    host: "",
+    host: "rest/",
+    // host: "",
     page: {
         front: false,// 后端分页
         pageSizes: [10, 20, 50],

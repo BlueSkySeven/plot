@@ -307,15 +307,12 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   }
   changePageData(stChange?: STChange){
     //this.deteleId = stChange
-    
-    console.log(stChange)
     if(stChange.type == 'checkbox'){
       this.deteleId = []
       let _this = this
       stChange['checkbox'].map(function(item){
         _this.deteleId.push({id:item['id']})
       })
-      console.log(this.deteleId)
     }
     if(stChange.pi){
       if (stChange.pi != this.pageIndex || stChange.ps != this.pageSize) {
@@ -720,6 +717,36 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       this.isLoading = false;
     })
   }
+
+  toCsv(value){
+    let str:string = ''
+    value.map(function(item,index){
+      let strItem = ''
+      for(var i in item){
+        if(i == 'id'){
+
+        }else{
+          strItem = strItem + i + "=" + (value[index][i]||"") + ","
+        }
+      }
+      str = str + strItem + '\r\n'
+    })
+    return str
+  }
+  exportCsv () {
+    // if(!this.dataList || this.dataList.length == 0){
+    //   this.message.error('无数据导出');
+    // }
+    // else if(this.dataList.length > 0){
+      var link = document.getElementById("exportCsv");
+      var blob = new Blob(["\uFEFF" + this.toCsv(this.dataList)], { type: 'text/csv;charset=utf-8;' });
+      var date = new Date()
+      var time = date.getMonth() + "_" + date.getDate() + "_" + date.getHours() + "_" + date.getMinutes()
+      var filename = "export_file_" + time + ".csv";
+      link['download'] = filename;//这里替换为你需要的文件名
+      link['href'] = URL.createObjectURL(blob);
+    // }
+  }
   csvAdd(data : any){
     let _this = this
     data.map(function(item){
@@ -727,69 +754,38 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         dbname:"rule_management"
       }
       let param = {}
-      if(_this.currentIndex == 0){
-        param = {
-          ...dbname,
-          tablename: "ivr",
-          data:{
-            ruletype : item[0],
-            indicator : item[1],
-            value : item[2],
-            uproto : item[3],
-            remark : item[4],
-          }
-        };
+      let data = {}
+      let tablename = ''
+      for(let i =0;i<item.length;i++){
+        let arr = item[i].split("=")
+        data[arr[0]] = arr[1] || ""
       }
-      else if(_this.currentIndex == 1){
-        param = {
-          ...dbname,
-          tablename: "pkr",
-          data:{
-            ruletype : item[0],
-            proto : item[1],
-            key_ : item[2],
-            uproto : item[3],
-            remark : item[4],
-          }
-        };
+      let index:any = _this.currentIndex
+      switch (index) {
+        case 0:
+          tablename = 'ivr';
+          break;
+        case 1:
+          tablename = 'pkr';
+          break;
+        case 2:
+          tablename = 'polvr';
+          break;
+        case 3:
+          tablename = 'md';
+          break;
+        default:
+          tablename = 'sa';
+          break;
       }
-      else if(_this.currentIndex == 2){
-        param = {
-          ...dbname,
-          tablename: "polvr",
-          data:{
-            ruletype : item[0],
-            proto : item[1],
-            value : item[2],
-            uproto : item[3],
-            length : item[4],
-            offset : item[5],
-            remark : item[6],
-          }
-        };
+      param = {
+        ...dbname,
+        tablename,
+        data:{
+          ...data
+        }
       }
-      else if(_this.currentIndex == 3){
-        param = {
-          ...dbname,
-          tablename: "md",
-          data:{
-            ruletype : item[0],
-            proto : item[1],
-            remark : item[2],
-          }
-        };
-      }
-      else{
-        param = {
-          ...dbname,
-          tablename: "sa",
-          data:{
-            ruletype : item[0],
-            tuples : item[1],
-            remark : item[2],
-          }
-        };
-      }
+      console.log(param)
       _this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         console.log(data,"data")
@@ -814,7 +810,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
 
     this.isLoading = true
     reader.onload = (e: any) => {
-      console.log("!!!")
       /* read workbook */
       const bstr: string = e.target.result;
       const wb: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary'});
@@ -830,7 +825,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     };
     this.isLoading = false
     reader.readAsBinaryString(target.files[0]);   
-    }
+  }
 
   /**
    * 销毁订阅

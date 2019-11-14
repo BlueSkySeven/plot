@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import * as XLSX from 'xlsx';
+import { async } from 'rxjs/internal/scheduler/async';
 
 const moment = require('moment');
 
@@ -32,6 +33,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   pageData: {};
   keyWord = ``;
   expandKeys = ['100', '1001'];
+  isVisible:boolean;
   treevalue: string;
   projectId:number;
   projectRuletype: string;
@@ -47,6 +49,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   projectRemark:string;
   projectSubtype:string;
   projectGroup:string;
+  projectPath:string;
   projectSize:string;
   projectRecord: any;
   treenodes = [];
@@ -64,7 +67,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "ruletype", index: "ruletype" },
     { title: "subtype", index: "subtype" },
     { title: "indicator", index: "indicator" },
-    { title: "value", index: "value" },
+    { title: "value_f", index: "value_f" },
     { title: "uproto", index: "uproto" },
     { title: "remark", index: "remark" },
     {
@@ -80,7 +83,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectSubtype = record.subtype;
           this.projectRemark = record.remark;
           this.projectIndicator = record.indicator;
-          this.projectValue = record.value;
+          this.projectValue = record.value_f;
           this.projectUproto = record.uproto;
           this.add('编辑', 0, this.editObject);
         }
@@ -93,7 +96,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.deleteObject("one");
-          this.getList("query");
+          //this.getList("query");
         }
       }]
     },
@@ -130,7 +133,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.deleteObject("one");
-          this.getList("query");
+          //this.getList("query");
         }
       }]
     },
@@ -140,9 +143,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype" },
     { title: "proto", index: "proto" },
-    { title: "offset", index: "offset" },
+    { title: "offset_f", index: "offset_f" },
     { title: "length", index: "length" },
-    { title: "value", index: "value" },
+    { title: "value_f", index: "value_f" },
     { title: "uproto", index: "uproto" },
     { title: "remark", index: "remark" },
     {
@@ -156,10 +159,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRuletype = record.ruletype;
           this.projectRemark = record.remark;
           this.projectProto = record.proto;
-          this.projectValue = record.value;
+          this.projectValue = record.value_f;
           this.projectUproto = record.uproto;
           this.projectLength = record.length;
-          this.projectOffset = record.offset;
+          this.projectOffset = record.offset_f;
           this.add('编辑', 2, this.editObject);
         }
       }, {
@@ -171,7 +174,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.deleteObject("one");
-          this.getList("query");
+          //this.getList("query");
         }
       }]
     },
@@ -206,7 +209,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.deleteObject("one");
-          this.getList("query");
+          //this.getList("query");
         }
       }]
     },
@@ -216,8 +219,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     { title: "编号", index: "id" },
     { title: "ruletype", index: "ruletype"},
     { title: "tuples", index: "tuples" },
-    { title: "group", index: "group" },
+    { title: "group_f", index: "group_f" },
     { title: "size", index: "size" },
+    { title: "path", index: "path" },
     { title: "remark", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
@@ -230,7 +234,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRuletype = record.ruletype;
           this.projectRemark = record.remark;
           this.projectTuples = record.tuples;
-          this.projectGroup = record.group;
+          this.projectGroup = record.group_f;
+          this.projectPath = record.path;
           this.projectSize = record.size;
           this.add('编辑', 4, this.editObject);
         }
@@ -243,7 +248,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.projectId = record.id;
           this.deleteObject("one");
-          this.getList("query");
+          //this.getList("query");
         }
       }]
     },
@@ -279,6 +284,23 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     this.getList("query");
   }
 
+  showModal(): void {
+    console.log(this.deteleId,this.deteleId.length,"this.deteleId")
+    if(this.deteleId.length == 0){
+      this.message.error("未选择删除项")
+      return
+    }
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    this.deleteObject('array')
+    this.isVisible = false;
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
   /**
    * 获取内容
    */
@@ -286,6 +308,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     this.isLoading = true
     this.currentIndex = stChange
     this.pageIndex = 1
+    await this.getList("query")
     if(stChange == 0){
       this.columns = this.columns1
     }
@@ -301,10 +324,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     else{
       this.columns = this.columns5
     }
-    await this.getList("query")
     this.isLoading = false;
-
   }
+  
   changePageData(stChange?: STChange){
     //this.deteleId = stChange
     if(stChange.type == 'checkbox'){
@@ -325,7 +347,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       }
     }
   }
-  getList(str :string){
+  
+  async getList(str :string){
     this.isLoading = true;
     let dbname = {}
     if(str == 'select'){
@@ -346,7 +369,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         page: this.pageIndex - 1,
         count: this.pageSize
       }
-      console.log
     }
     let param = {}
     if(this.currentIndex == 0){
@@ -380,7 +402,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       };
     }
     var _this = this
-    return new Promise(function(){
+    return new Promise((resolve,reject)=>{
       _this.pageData = []
       _this.proSrv.getAllListInfoPost(UtilStatic.host+'getSingleTable', param)
       .subscribe(data => {
@@ -388,7 +410,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         _this.dataList = data['data']
         _this.total = str == 'select' ? data['data'].length : data['allCount'];
         _this.pageData = _this.dataList
-        
+        resolve(_this.dataList)
       }, error => {
         _this.isLoading = false;
       });
@@ -399,7 +421,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
    * 新建项目弹窗
    */
   add(nzTitle: string, tpl: number, callBack: any): void {
-    if(nzTitle == "创建规则"){
+    if(nzTitle == "新建规则"){
       this.projectRuletype = null;
       this.projectRemark = null;
       this.projectIndicator = null;
@@ -411,6 +433,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       this.projectLength = null;
       this.projectTuples = null;
       this.projectGroup = null;
+      this.projectPath = null;
       this.projectSize = null;
       this.projectSubtype = null;
     }
@@ -456,7 +479,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           subtype : this.projectSubtype,
           remark :this.projectRemark,
           indicator : this.projectIndicator,
-          value : this.projectValue,
+          value_f : this.projectValue,
           uproto : this.projectUproto,
         }
       };
@@ -482,10 +505,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           ruletype : this.projectRuletype,
           remark :this.projectRemark,
           proto : this.projectProto,
-          value : this.projectValue,
+          value_f : this.projectValue,
           uproto : this.projectUproto,
           length : this.projectLength,
-          offset : this.projectOffset,
+          offset_f : this.projectOffset,
         }
       };
     }
@@ -510,7 +533,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           remark :this.projectRemark,
           tuples : this.projectTuples,
           size :this.projectSize,
-          group : this.projectGroup,
+          group_f : this.projectGroup,
+          path: this.projectPath
         }
       };
     }
@@ -536,6 +560,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.projectTuples = null;
         this.projectKey = null;
         this.projectGroup = null;
+        this.projectPath = null;
         this.projectSize = null;
         this.projectSubtype = null;
       }, error => {
@@ -563,7 +588,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           subtype : this.projectSubtype,
           remark :this.projectRemark,
           indicator : this.projectIndicator,
-          value : this.projectValue,
+          value_f : this.projectValue,
           uproto : this.projectUproto,
         }
       };
@@ -589,10 +614,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           ruletype : this.projectRuletype,
           remark :this.projectRemark,
           proto : this.projectProto,
-          value : this.projectValue,
+          value_f : this.projectValue,
           uproto : this.projectUproto,
           length : this.projectLength,
-          offset : this.projectOffset,
+          offset_f : this.projectOffset,
         }
       };
     }
@@ -617,7 +642,8 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           remark :this.projectRemark,
           tuples : this.projectTuples,
           size :this.projectSize,
-          group : this.projectGroup,
+          group_f : this.projectGroup,
+          path: this.projectPath
         }
       };
     }
@@ -645,6 +671,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       this.projectTuples = null;
       this.projectKey = null;
       this.projectGroup = null;
+      this.projectPath = null;
       this.projectSize = null;
       this.projectSubtype = null;
   }
@@ -663,10 +690,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       }
     }
     else{
-      if(this.deteleId.length == 0){
-        this.message.error("未选择删除项")
-        return
-      }
       dbname = {
         dbname:"rule_management",
         filter:this.deteleId
@@ -704,15 +727,20 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(data => {
+    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(async data => {
       this.isLoading = false;
       if (!data['affectedRows']) {
         this.message.error('删除失败');
         return;
       }
       this.message.success('删除成功');
-      this.pageIndex = 1
+      //this.pageIndex = 1
+      await this.getList("query");
+      if(this.dataList.length === 0){
+      this.pageIndex = this.pageIndex - 1
       this.getList("query");
+      }
+      this.deteleId = []
     }, error => {
       this.isLoading = false;
     })
@@ -750,6 +778,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   csvAdd(data : any){
     let _this = this
     data.map(function(item){
+    try{
       let dbname = {
         dbname:"rule_management"
       }
@@ -757,6 +786,13 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       let data = {}
       let tablename = ''
       for(let i =0;i<item.length;i++){
+        //???????????????????????????? remark=11导入后会自动变成数字
+        if(item[i] == 37196.000497685185){
+          item[i] = 'remark=11'
+        }
+        if(item[i] == 36892.000497685185){
+          item[i] = 'remark=1'
+        }
         let arr = item[i].split("=")
         data[arr[0]] = arr[1] || ""
       }
@@ -785,18 +821,21 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           ...data
         }
       }
-      console.log(param)
       _this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         console.log(data,"data")
         if (!data['affectedRows']) {
           _this.message.error("添加失败");
-          return;
         }
+        else{
         _this.message.success("添加成功");
+        }
       }, error => {
         
       })
+    }catch(e){
+        _this.message.error("数据有误")
+      }
     })
   }
   //导入csv
@@ -818,7 +857,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
       /* save data */
       this.inputdata = (XLSX.utils.sheet_to_json(ws, {header: 1})); 
-      console.log(this.inputdata)
+      console.log(this.inputdata,"@@@")
       evt.target.value="" // 清空   
       this.csvAdd(this.inputdata)
       this.getList("query")

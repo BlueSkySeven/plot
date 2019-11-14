@@ -7,6 +7,7 @@ import { UtilStatic, utilMessage } from '../../util/util-static';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 import { Subscription, of } from 'rxjs';
+import { async } from '@angular/core/testing';
 const moment = require('moment');
 
 @Component({
@@ -27,14 +28,14 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
   latitude: string;
   zipcode: string;
   timezone: string;
-  timestamp: string;
+  timestamp_f: string;
   ciso: string;
   province: string;
   origin_id: string;
   oui: string;
   supplier: string;
   currentIndex: 0;
-  dataList: {};
+  dataList: [];
 
 
   page = UtilStatic.page;
@@ -68,7 +69,9 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
     { title: "latitude", index: "latitude" },
     { title: "zipcode", index: "zipcode" },
     { title: "timezone", index: "timezone" },
-    { title: "timestamp", index: "timestamp" },
+    { title: "timestamp_f", index: "timestamp_f" },
+    { title: "ciso", index: "ciso" },
+    { title: "province", index: "province" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -87,7 +90,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           this.latitude = record.latitude;
           this.zipcode = record.zipcode;
           this.timezone= record.timezone;
-          this.timestamp = record.timestamp;
+          this.timestamp_f = record.timestamp_f;
           this.ciso = record.ciso;
           this.province = record.province;
 
@@ -102,7 +105,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.id = record.id
           this.deleteObject();
-          this.getList('query');
+          //this.getList('query');
         }
       }]
     },
@@ -111,7 +114,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
     { title: "编号", index: "id" },
     { title: "OUI", index: "oui" },
     { title: "厂商名称", index: "supplier" },
-    { title: "时间戳", index: "timestamp" },
+    { title: "时间戳", index: "timestamp_f" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -119,7 +122,8 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
         icon: 'edit',
         click: (record, _modal, comp) => {
           this.projectRecord = record;
-          this.id = record.id
+          this.id = record.id;
+          this.timestamp_f = record.timestamp_f;
           this.origin_id = record.origin_id;
           this.oui = record.oui;
           this.supplier = record.supplier;
@@ -134,7 +138,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           this.projectRecord = record;
           this.id = record.id
           this.deleteObject();
-          this.getList('query');
+          //this.getList('query');
         }
       }]
     },
@@ -179,19 +183,17 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentIndex = stChange
     this.pageIndex = 1
+    await this.getList('query')
     if(stChange == 0){
       this.columns = this.columns1
     }
     else{
       this.columns = this.columns2
     }
-    await this.getList('query')
     this.isLoading = false;
-    console.log(this.pageData)
   }
   changePageData(stChange?: STChange){
     //this.deteleId = stChange
-    console.log(stChange)
     if(stChange.pi){
       if (stChange.pi != this.pageIndex || stChange.ps != this.pageSize) {
         if (stChange.type === `click` || stChange.type === `dblClick`) {
@@ -224,7 +226,6 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
         page: this.pageIndex - 1,
         count: this.pageSize
       }
-      console.log
     }
     let param = {}
     if(this.currentIndex == 0){
@@ -240,14 +241,15 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       };
     }
     var _this = this
-    return new Promise(function(){
+    return new Promise((resolve,reject)=>{
       _this.pageData = []
       _this.proSrv.getAllListInfoPost(UtilStatic.host+'getSingleTable', param)
       .subscribe(data => {
         _this.isLoading = false;
-        _this.dataList = data
+        _this.dataList = data['data'] || []
         _this.total = str == 'select' ? data['data'].length : data['allCount'];
-        _this.pageData = data['data'] || []
+        _this.pageData = _this.dataList
+        resolve(_this.dataList)
       }, error => {
         _this.isLoading = false;
       });
@@ -270,7 +272,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       this.latitude = null;
       this.zipcode = null;
       this.timezone= null;
-      this.timestamp = null;
+      this.timestamp_f = null;
       this.ciso = null;
       this.province = null;
       this.origin_id = null,
@@ -316,7 +318,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           latitude : this.latitude,
           zipcode : this.zipcode,
           timezone : this.timezone,
-          timestamp : this.timestamp,
+          timestamp_f : this.timestamp_f,
           ciso : this.ciso,
           province : this.province,
         }
@@ -330,6 +332,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           origin_id : this.origin_id,
           oui : this.oui,
           supplier : this.supplier,
+          timestamp_f : this.timestamp_f,
         }
       };
     }
@@ -354,7 +357,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
         this.latitude = null;
         this.zipcode = null;
         this.timezone= null;
-        this.timestamp = null;
+        this.timestamp_f = null;
         this.ciso = null;
         this.province = null;
         this.origin_id = null,
@@ -391,7 +394,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           latitude : this.latitude,
           zipcode : this.zipcode,
           timezone : this.timezone,
-          timestamp : this.timestamp,
+          timestamp_f : this.timestamp_f,
           ciso : this.ciso,
           province : this.province,
         }
@@ -405,6 +408,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
           origin_id : this.origin_id,
           oui : this.oui,
           supplier : this.supplier,
+          timestamp_f : this.timestamp_f,
         }
       };
     }
@@ -431,7 +435,7 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       this.latitude = null;
       this.zipcode = null;
       this.timezone= null;
-      this.timestamp = null;
+      this.timestamp_f = null;
       this.ciso = null;
       this.province = null;
       this.origin_id = null,
@@ -445,9 +449,9 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
   deleteObject = (): void => {
     let dbname = {
       dbname:"knowledge_management",
-      filter:{
+      filter:[{
         id: this.id
-      }
+      }]
     }
     let param = {}
     if(this.currentIndex == 0){
@@ -463,15 +467,19 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
       };
     }
     this.isLoading = true;
-    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(data => {
+    this.proSrv.deleteInfoPost(UtilStatic.host+'deleteData', param).subscribe(async data => {
       this.isLoading = false;
       if (!data['affectedRows']) {
         this.message.error('删除失败');
         return;
       }
-      this.pageIndex = 1
+      //this.pageIndex = 1
       this.message.success('删除成功');
-      this.getList('query');
+      await this.getList('query')
+      if(this.dataList.length === 0){
+        this.pageIndex = this.pageIndex - 1
+        this.getList("query");
+      }
     }, error => {
       this.isLoading = false;
     })

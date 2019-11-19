@@ -20,12 +20,16 @@ const moment = require('moment');
   styles: []
 })
 export class RulesManagerComponent implements OnInit, OnDestroy {
+  isHadloaded = false;
+  selectType = "";
+  allType = [];
   inputdata = [];
   httpPage:1;
   deteleId: any[] = [];
   currentIndex: 0;
   itemDetail:{};
   dataList: [];
+  dataAllList: any;
   page = UtilStatic.page;
   pageIndex = 1;
   pageSize = 10;
@@ -305,6 +309,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
    * 获取内容
    */
    async changeTab(stChange){
+    this.isHadloaded = false
     this.isLoading = true
     this.currentIndex = stChange
     this.pageIndex = 1
@@ -326,7 +331,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     }
     this.isLoading = false;
   }
-  
+  provinceChange(value: string): void {
+    console.log(value)
+  }
   changePageData(stChange?: STChange){
     //this.deteleId = stChange
     if(stChange.type == 'checkbox'){
@@ -343,6 +350,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         }
         this.pageIndex = stChange.pi;
         this.pageSize = stChange.ps;
+        //this.dataListItem = this.dataList.slice((this.pageIndex-1)*this.pageSize,this.pageSize*this.pageIndex)
         this.getList('query')
       }
     }
@@ -356,11 +364,15 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.getList('query')
         return
       }
+      var obj = {}
+      obj[this.selectType] = this.keyWord
       dbname = {
         dbname:"rule_management",
         filter:[
-          {id:this.keyWord},
-      ]
+          {
+            ...obj,
+          },
+        ],
       }
     }
     else{
@@ -371,36 +383,85 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       }
     }
     let param = {}
+    let paramGetALL = {}
     if(this.currentIndex == 0){
       param = {
         ...dbname,
         tablename: "ivr",
       };
+      paramGetALL = {
+        dbname: "rule_management",
+        page: 0,
+        count: 10000,
+        tablename: "ivr",
+      }
     }
     else if(this.currentIndex == 1){
       param = {
         ...dbname,
         tablename: "pkr",
       };
+      paramGetALL = {
+        dbname: "rule_management",
+        page: 0,
+        count: 10000,
+        tablename: "pkr",
+      }
     }
     else if(this.currentIndex == 2){
       param = {
         ...dbname,
         tablename: "polvr",
       };
+      paramGetALL = {
+        dbname: "rule_management",
+        page: 0,
+        count: 10000,
+        tablename: "polvr",
+      }
     }
     else if(this.currentIndex == 3){
       param = {
         ...dbname,
         tablename: "md",
       };
+      paramGetALL = {
+        dbname: "rule_management",
+        page: 0,
+        count: 10000,
+        tablename: "md",
+      }
     }
     else{
       param = {
         ...dbname,
         tablename: "sa",
       };
+      paramGetALL = {
+        dbname: "rule_management",
+        page: 0,
+        count: 10000,
+        tablename: "sa",
+      }
     }
+
+    this.proSrv.getAllListInfoPost(UtilStatic.host+'getSingleTable', paramGetALL)
+    .subscribe(data => {
+      this.dataAllList = data['data']
+      if(!this.isHadloaded){
+        if(data['data'].length == 0){
+          this.allType = []
+          this.selectType = ""
+        }
+        else{
+          this.allType = Object.keys(data['data'][0])
+          this.selectType = Object.keys(data['data'][0])[0]
+        }
+        this.isHadloaded = true
+      }
+    }, error => {
+
+    });
     var _this = this
     return new Promise((resolve,reject)=>{
       _this.pageData = []
@@ -416,7 +477,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       });
     })
   }
-
   /**
    * 新建项目弹窗
    */
@@ -767,10 +827,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     // }
     // else if(this.dataList.length > 0){
       var link = document.getElementById("exportCsv");
-      var blob = new Blob(["\uFEFF" + this.toCsv(this.dataList)], { type: 'text/csv;charset=utf-8;' });
+      var blob = new Blob(["\uFEFF" + this.toCsv(this.dataList)], { type: 'text/xlsx;charset=utf-8;' });
       var date = new Date()
       var time = date.getMonth() + "_" + date.getDate() + "_" + date.getHours() + "_" + date.getMinutes()
-      var filename = "export_file_" + time + ".csv";
+      var filename = "export_file_" + time + ".xlsx";
       link['download'] = filename;//这里替换为你需要的文件名
       link['href'] = URL.createObjectURL(blob);
     // }
@@ -783,16 +843,11 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         dbname:"rule_management"
       }
       let param = {}
-      let data = {}
+      let data:any = {}
       let tablename = ''
       for(let i =0;i<item.length;i++){
-        //???????????????????????????? remark=11导入后会自动变成数字
-        if(item[i] == 37196.000497685185){
-          item[i] = 'remark=11'
-        }
-        if(item[i] == 36892.000497685185){
-          item[i] = 'remark=1'
-        }
+        //???????????????????????????? remark=xx导入后会自动变成数字
+        //xlsx 文件自身兼容性问题
         let arr = item[i].split("=")
         data[arr[0]] = arr[1] || ""
       }
@@ -819,11 +874,53 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         tablename,
         data:{
           ...data
+        },
+      }
+      var isExist = false
+      var id
+      for(var j=0;j<_this.dataAllList.length;j++){
+        var p = 0
+        for(var i in _this.dataAllList[j]){
+          if(i == "id" || i == 'remark'){
+            continue
+          }
+          else if(_this.dataAllList[j][i] == data[i]){
+            p++
+          }
+          else{
+            
+          }
+        }
+        if(p == Object.keys(data).length - 1){
+          id = _this.dataAllList[j].id
+          isExist = true
+          break;
         }
       }
+      console.log(isExist,"isExist");
+      if(isExist){//相同数据覆盖，不同数据则添加
+        let paramR = {
+          ...param,
+        filter:{
+          id: id
+        }
+        }
+        _this.proSrv.editInfoPost(UtilStatic.host+'updateData', paramR)
+        .subscribe(data => {
+          _this.isLoading = false;
+          if (!data['affectedRows']) {
+            _this.message.error('覆盖失败');
+            return;
+          }
+          _this.message.success('覆盖成功');
+          //_this.getList("query");
+        }, error => {
+          _this.isLoading = false;
+        })
+      }
+      else{
       _this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
-        console.log(data,"data")
         if (!data['affectedRows']) {
           _this.message.error("添加失败");
         }
@@ -833,7 +930,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       }, error => {
         
       })
+      }
     }catch(e){
+      console.log(e)
         _this.message.error("数据有误")
       }
     })
@@ -845,8 +944,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     if (target.files.length !== 1)
     throw new Error('Cannot use multiple files');
     var reader = new FileReader();
-    console.log(target['input'])
-
     this.isLoading = true
     reader.onload = (e: any) => {
       /* read workbook */

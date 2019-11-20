@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
-import { STColumn, STPage, STChange, STReq } from '@delon/abc';
+import { STColumn, STPage, STChange, STReq, STData } from '@delon/abc';
 import { _HttpClient, SettingsService, MenuService } from '@delon/theme';
 import { GetInfoServiceService, ProjectProviderService, ObservableInfoProviderService } from '@core/services';
 import { InterfaceStr } from '@core/interface';
@@ -20,12 +20,19 @@ const moment = require('moment');
   styles: []
 })
 export class RulesManagerComponent implements OnInit, OnDestroy {
+  state:string;
+  selectConditions:object;
   isHadloaded = false;
   selectType = "";
   allType = [];
   inputdata = [];
   httpPage:1;
-  deteleId: any[] = [];
+  currentData:any[];
+  deleteId: any[];
+  undeleteId:any[];
+  undeleteIdAll:any[];
+  deleteIdAll: any[];
+  isSelectedAll:boolean;
   currentIndex: 0;
   itemDetail:{};
   dataList: [];
@@ -36,9 +43,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   total: number;
   pageData: {};
   keyWord = ``;
-  expandKeys = ['100', '1001'];
   isVisible:boolean;
-  treevalue: string;
   projectId:number;
   projectRuletype: string;
   projectIndicator: string;
@@ -56,7 +61,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   projectPath:string;
   projectSize:string;
   projectRecord: any;
-  treenodes = [];
   isLoading: boolean;
   eventContent: Subscription;
   @ViewChild("actionTpl", { static: false }) actionTpl: TemplateRef<{}>;
@@ -284,13 +288,17 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       delete this.events.obHistoryInfo[getKey];
     }
     this.currentIndex = 0
+    this.deleteId = []
+    this.deleteIdAll = []
+    this.undeleteId = []
+    this.undeleteIdAll = []
+    this.isSelectedAll = false
     this.columns = this.columns1
     this.getList("query");
   }
 
   showModal(): void {
-    console.log(this.deteleId,this.deteleId.length,"this.deteleId")
-    if(this.deteleId.length == 0){
+    if(this.deleteIdAll.length == 0 && !this.isSelectedAll){
       this.message.error("未选择删除项")
       return
     }
@@ -309,6 +317,11 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
    * 获取内容
    */
    async changeTab(stChange){
+    this.deleteId = []
+    this.deleteIdAll = []
+    this.undeleteId = []
+    this.undeleteIdAll = []
+    this.isSelectedAll = false
     this.isHadloaded = false
     this.isLoading = true
     this.currentIndex = stChange
@@ -331,16 +344,91 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     }
     this.isLoading = false;
   }
+
+  newArr(arr){
+    for(var i=0;i<arr.length;i++){
+        for(var j=i+1;j<arr.length;j++)
+            if(arr[i].id==arr[j].id){ 
+            //如果第一个等于第二个，splice方法删除第二个
+            arr.splice(j,1);
+            j--;
+            }
+        }
+    return arr;
+  }
   provinceChange(value: string): void {
     console.log(value)
   }
+  selectAll(){
+    this.isSelectedAll = !this.isSelectedAll
+    this.deleteIdAll = []
+    this.deleteId = []
+    this.undeleteId = []
+    this.undeleteIdAll = []
+    this.getList(this.state)
+  }
+  dataChange(data: STData[]){
+    this.currentData = data
+
+    var arr = this.deleteIdAll.map(function(item){
+      return item.id
+    })
+    var undeleteArr = this.undeleteIdAll.map(function(item){
+      return item.id
+    })
+    return data.map((i: STData, index: number) => {
+      if(this.isSelectedAll){
+        i.checked = true
+        if(undeleteArr.indexOf(i.id) >= 0){
+          i.checked = false
+        }
+      }
+      else{
+      i.checked = arr.indexOf(i.id) >= 0;
+      }
+      return i;
+    });
+  }
   changePageData(stChange?: STChange){
-    //this.deteleId = stChange
+    console.log(this.deleteIdAll,"deleteIdAll")
+    console.log(this.undeleteIdAll,"undeleteIdAll")
+    this.undeleteId = this.newArr(this.undeleteId)
+    this.undeleteIdAll = this.newArr(this.undeleteIdAll.concat(this.undeleteId))
+    this.deleteIdAll = this.newArr(this.deleteIdAll.concat(this.deleteId))
+    if(!this.isSelectedAll){
+      for(let i=0;i<this.undeleteId.length;i++){
+        for(let j=0;j<this.deleteIdAll.length;j++){
+          if(this.undeleteId[i].id == this.deleteIdAll[j].id){
+            this.deleteIdAll.splice(j,1)
+          }
+        }
+      }
+    }
+    else{
+      for(let i=0;i<this.deleteId.length;i++){
+        for(let j=0;j<this.undeleteIdAll.length;j++){
+          if(this.deleteId[i].id == this.undeleteIdAll[j].id){
+            this.undeleteIdAll.splice(j,1)
+          }
+        }
+      }
+    }
     if(stChange.type == 'checkbox'){
-      this.deteleId = []
+      this.deleteId = []
+      this.undeleteId = []
       let _this = this
+      this.currentData.map(function(item){
+        if(stChange['checkbox'].map(function(item){
+          return item.id}).indexOf(item.id) >= 0)
+        {
+
+        }
+        else{
+          _this.undeleteId.push({id:item['id']})
+        }
+      })
       stChange['checkbox'].map(function(item){
-        _this.deteleId.push({id:item['id']})
+        _this.deleteId.push({id:item['id']})
       })
     }
     if(stChange.pi){
@@ -351,7 +439,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         this.pageIndex = stChange.pi;
         this.pageSize = stChange.ps;
         //this.dataListItem = this.dataList.slice((this.pageIndex-1)*this.pageSize,this.pageSize*this.pageIndex)
-        this.getList('query')
+        this.getList(this.state)
       }
     }
   }
@@ -359,13 +447,23 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   async getList(str :string){
     this.isLoading = true;
     let dbname = {}
-    if(str == 'select'){
+    if(str.indexOf('select') != -1){
+      this.state = "select"
+      if(str == "selectClearSelected"){
+        this.pageIndex = 1
+        this.deleteId = []
+        this.deleteIdAll = []
+        this.undeleteId = []
+        this.undeleteIdAll = []
+        this.isSelectedAll = false
+      }
       if(!this.keyWord){
         this.getList('query')
         return
       }
       var obj = {}
       obj[this.selectType] = this.keyWord
+      this.selectConditions = obj
       dbname = {
         dbname:"rule_management",
         filter:[
@@ -373,9 +471,13 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
             ...obj,
           },
         ],
+        page: this.pageIndex - 1,
+        count: this.pageSize
       }
     }
     else{
+      this.selectConditions = {}
+      this.state = "query"
       dbname = {
         dbname:"rule_management",
         page: this.pageIndex - 1,
@@ -449,14 +551,14 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     .subscribe(data => {
       this.dataAllList = data['data']
       if(!this.isHadloaded){
-        if(data['data'].length == 0){
-          this.allType = []
-          this.selectType = ""
-        }
-        else{
+        // if(data['data'].length == 0){
+        //   this.allType = []
+        //   this.selectType = ""
+        // }
+        // else{
           this.allType = Object.keys(data['data'][0])
           this.selectType = Object.keys(data['data'][0])[0]
-        }
+        // }
         this.isHadloaded = true
       }
     }, error => {
@@ -469,7 +571,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         _this.isLoading = false;
         _this.dataList = data['data']
-        _this.total = str == 'select' ? data['data'].length : data['allCount'];
+        _this.total = data['allCount'];
         _this.pageData = _this.dataList
         resolve(_this.dataList)
       }, error => {
@@ -608,7 +710,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           return;
         }
         this.message.success("添加成功");
-        this.getList("query");
+        this.getList(this.state);
         this.projectRuletype = null;
         this.projectRemark = null;
         this.projectProto = null;
@@ -746,13 +848,27 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         dbname:"rule_management",
         filter:[{
           id: this.projectId
-        }]
+        }],
+        isSelectedAll:false
       }
     }
     else{
-      dbname = {
-        dbname:"rule_management",
-        filter:this.deteleId
+      if(Object.keys(this.selectConditions).length > 0){
+        dbname = {
+          dbname:"rule_management",
+          filter: this.isSelectedAll ? this.undeleteIdAll : this.deleteIdAll,
+          isSelectedAll:this.isSelectedAll,
+          precondition:{ 
+            ...this.selectConditions
+          }
+        }
+      }
+      else{
+        dbname = {
+          dbname:"rule_management",
+          filter: this.isSelectedAll ? this.undeleteIdAll : this.deleteIdAll,
+          isSelectedAll:this.isSelectedAll,
+        }
       }
     }
     let param = {}
@@ -795,12 +911,16 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       }
       this.message.success('删除成功');
       //this.pageIndex = 1
-      await this.getList("query");
-      if(this.dataList.length === 0){
+      await this.getList(this.state);
+      if(this.dataList.length === 0 && this.pageIndex > 1){
       this.pageIndex = this.pageIndex - 1
-      this.getList("query");
+      this.getList(this.state);
       }
-      this.deteleId = []
+      this.isSelectedAll = false
+      this.undeleteId = []
+      this.undeleteIdAll = []
+      this.deleteIdAll = []
+      this.deleteId = []
     }, error => {
       this.isLoading = false;
     })

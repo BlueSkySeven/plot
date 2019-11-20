@@ -15,22 +15,23 @@
 </nz-tabset>
 <div class="mb-md project-search">
     <div>
+            <button nz-button [nzType]="'primary'" (click)="selectAll()">{{this.isSelectedAll ? '清除选中': '全部选中'}}</button>
     <button nz-button [nzType]="'primary'" (click)="showModal()">批量删除</button>
     <button nz-button (click)="add('新建规则',this.currentIndex,addObject);" [nzType]="'primary'">新建规则</button>
     </div>
     <div style="display: flex;flex-direction: row;">
         <nz-input-group [nzSuffix]="suffixTemplate" nzCompact>
-            <nz-select [(ngModel)]="selectType" (ngModelChange)="provinceChange($event)" style="width: 80px">
+            <nz-select [(ngModel)]="selectType" (ngModelChange)="provinceChange($event)" style="width: 100px">
                 <nz-option *ngFor="let option of allType" [nzLabel]="option" [nzValue]="option"></nz-option>
             </nz-select>
-            <input nz-input (keydown.enter)="getList('select')" [(ngModel)]="keyWord" name="name" placeholder="请输入id精确查找"
+            <input nz-input (keydown.enter)="getList('selectClearSelected')" [(ngModel)]="keyWord" name="name" placeholder="请输入字段精确查找"
             style="width:200px;" class="mr-sm">
         </nz-input-group>
         <ng-template #suffixTemplate>
             <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle" *ngIf="keyWord"
-                (click)="keyWord = null;getList('query');keyWord=''"></i>
+                (click)="keyWord = null;getList('selectClearSelected');keyWord=''"></i>
         </ng-template>
-        <button nz-button (click)="getList('select')" [nzType]="'primary'">搜索</button>
+        <button nz-button (click)="getList('selectClearSelected')" [nzType]="'primary'">搜索</button>
         <button style="position: relative;margin-left: 16px;margin-right: 16px;width:60px;height: 32px;border-radius: 4px;background: #1890FF;border-width:0 ;overflow: hidden;">
                 <label style="color: white;">导入</label> 
                 <input id="importCsv" type="file" accept=".xlsx" multiple="false" (change)="onImportCsv($event)"
@@ -43,11 +44,11 @@
 </div>
 
 <st #st [data]="pageData" [columns]="columns" [loading]="isLoading" 
-    [page]="page" (change)="changePageData($event)"
+    [page]="page" (change)="changePageData($event)" [res]="{process: dataChange.bind(this)}"
     multiSort
     [bordered]="true" [pi]="pageIndex" [total]="total"></st>
 <nz-modal [(nzVisible)]="isVisible" nzTitle="提示" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-    <p>是否删除勾选项？</p>
+    <p>是否删除勾选项(共{{this.isSelectedAll ? this.total - this.undeleteIdAll.length : this.deleteIdAll.length}}条)？</p>
 </nz-modal>
 <!-- 弹窗 -->
 <ng-template #actionTpl>

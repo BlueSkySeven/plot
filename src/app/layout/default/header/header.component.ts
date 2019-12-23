@@ -26,4 +26,9 @@ export class HeaderComponent {
   searchToggleChange() {
     this.searchToggleStatus = !this.searchToggleStatus;
   }
+  closeWindow(){
+    top.window.opener = top;
+    top.window.open('','_self','');
+    top.window.close();
+  }
 }

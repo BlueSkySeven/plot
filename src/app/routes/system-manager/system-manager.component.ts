@@ -7,7 +7,7 @@ import { UtilStatic, utilMessage } from '../../util/util-static';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 import { Subscription, of } from 'rxjs';
-import { async } from '@angular/core/testing';
+
 const moment = require('moment');
 
 @Component({
@@ -59,19 +59,19 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
   columns: STColumn[];
   columns1: STColumn[] = [
     { title: "编号", index: "id" },
-    { title: "ipv4beg", index: "ipv4beg" },
-    { title: "ipv4end", index: "ipv4end" },
-    { title: "ip_begins", index: "ip_begins" },
-    { title: "ip_ends", index: "ip_ends" },
-    { title: "cname", index: "cname" },
-    { title: "city", index: "city" },
-    { title: "longitude", index: "longitude" },
-    { title: "latitude", index: "latitude" },
-    { title: "zipcode", index: "zipcode" },
-    { title: "timezone", index: "timezone" },
-    { title: "timestamp_f", index: "timestamp_f" },
-    { title: "ciso", index: "ciso" },
-    { title: "province", index: "province" },
+    { title: "起始IP", index: "ipv4beg" },
+    { title: "结束IP", index: "ipv4end" },
+    { title: "起始IP(点分)", index: "ip_begins" },
+    { title: "结束IP(点分)", index: "ip_ends" },
+    { title: "国家名", index: "cname" },
+    { title: "城市名", index: "city" },
+    { title: "国家代码", index: "ciso" },
+    { title: "州(省)", index: "province" },
+    { title: "经度", index: "longitude" },
+    { title: "纬度", index: "latitude" },
+    { title: "区域码", index: "zipcode" },
+    { title: "时区", index: "timezone" },
+    { title: "记录时间", index: "timestamp_f" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -112,9 +112,9 @@ export class SystemManagerComponent implements OnInit, OnDestroy {
   ];
   columns2: STColumn[] = [
     { title: "编号", index: "id" },
-    { title: "OUI", index: "oui" },
+    { title: "厂商唯一识别码", index: "oui" },
     { title: "厂商名称", index: "supplier" },
-    { title: "时间戳", index: "timestamp_f" },
+    { title: "记录时间", index: "timestamp_f" },
     {
       title: "操作", index: "", "buttons": [
       {

@@ -1,8 +1,8 @@
 <div class="alain-default__progress-bar" *ngIf="isFetching"></div>
-<layout-header class="alain-default__header"></layout-header>
-<layout-sidebar class="alain-default__aside"></layout-sidebar>
-<section class="alain-default__content">
-  <reuse-tab></reuse-tab>
+<!-- <layout-header class="alain-default__header"></layout-header> -->
+<layout-sidebar id="alain-default__aside" class="alain-default__aside"></layout-sidebar>
+<section id="alain-default__content" class="alain-default__content">
+  <reuse-tab id="reuse-tab"></reuse-tab>
   <router-outlet></router-outlet>
 </section>
 <ng-template #settingHost></ng-template>

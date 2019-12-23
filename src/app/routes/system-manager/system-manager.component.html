@@ -2,9 +2,9 @@
     <!-- <nz-tab *ngFor="let tab of dataList" [nzTitle]="tab.name" [nzDisabled]="tab.disabled">
         {{ tab.name }}
     </nz-tab> -->
-    <nz-tab nzTitle="ip">
+    <nz-tab nzTitle="IP知识库">
     </nz-tab>
-    <nz-tab nzTitle="mac">
+    <nz-tab nzTitle="MAC知识库">
     </nz-tab>
 </nz-tabset>
 <div class="mb-md project-search">
@@ -33,102 +33,103 @@
 <ng-template #actionTpl>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">ipv4beg</nz-form-label>
-                    <input style="width: 300px;" maxlength="16" placeholder="限制16位" nz-input [(ngModel)]="ipv4beg" id="ipv4beg"
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">起始IP</nz-form-label>
+                    <input style="width: 300px;" maxlength="16" placeholder="限制16位内" nz-input [(ngModel)]="ipv4beg" id="ipv4beg"
                         name="ipv4beg"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">ipv4end</nz-form-label>
-                    <input style="width: 300px;" maxlength="16" placeholder="限制16位" nz-input [(ngModel)]="ipv4end" id="ipv4end"
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">结束IP</nz-form-label>
+                    <input style="width: 300px;" maxlength="16" placeholder="限制16位内" nz-input [(ngModel)]="ipv4end" id="ipv4end"
                     name="ipv4end"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">ip_begins</nz-form-label>
-                    <input style="width: 300px;" maxlength="16"  placeholder="限制16位" nz-input [(ngModel)]="ip_begins" id="ip_begins"
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">起始IP(点分)</nz-form-label>
+                    <input style="width: 300px;" maxlength="16"  placeholder="限制16位内" nz-input [(ngModel)]="ip_begins" id="ip_begins"
                     name="projectUproto"/>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">ip_ends</nz-form-label>
-                        <input style="width: 300px;" maxlength="16"  placeholder="限制16位" nz-input [(ngModel)]="ip_ends" name="ip_ends"
+                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">结束IP(点分)</nz-form-label>
+                        <input style="width: 300px;" maxlength="16"  placeholder="限制16位内" nz-input [(ngModel)]="ip_ends" name="ip_ends"
                             id="no" />
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">cname</nz-form-label>
+                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">国家名</nz-form-label>
                         <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="cname" id="cname"
                             name="cname" placeholder="请输入"/>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">city</nz-form-label>
+                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">城市名</nz-form-label>
                         <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="city" id="city"
                         name="city"  placeholder="请输入"/>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">longitude</nz-form-label>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">国家代码</nz-form-label>
+                            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="ciso" id="ciso"
+                            name="ciso"  placeholder="请输入"/>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">州(省)</nz-form-label>
+                            <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="province" id="province"
+                            name="province" placeholder="请输入"/>
+                        </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">经度</nz-form-label>
                         <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="longitude" id="longitude"
                         name="longitude" placeholder="请输入"/>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                         <nz-form-control>
-                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">latitude</nz-form-label>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">纬度</nz-form-label>
                             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="latitude" name="latitude"
                                 placeholder="请输入" id="no" />
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-control>
-                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">zipcode</nz-form-label>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">区域码</nz-form-label>
                             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="zipcode" id="zipcode"
                                 name="zipcode" placeholder="请输入"/>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-control>
-                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">timezone</nz-form-label>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">时区</nz-form-label>
                             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="timezone" id="timezone"
                             name="timezone"  placeholder="请输入"/>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-control>
-                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">timestamp_f</nz-form-label>
+                            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">记录时间</nz-form-label>
                             <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="timestamp_f" id="timestamp_f"
                             name="timestamp_f" placeholder="请输入"/>
                         </nz-form-control>
             </nz-form-item>
-            <nz-form-item>
-                <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">ciso</nz-form-label>
-                        <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="ciso" id="ciso"
-                        name="ciso"  placeholder="请输入"/>
-                    </nz-form-control>
-                </nz-form-item>
-                <nz-form-item>
-                    <nz-form-control>
-                        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">province</nz-form-label>
-                        <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="province" id="province"
-                        name="province" placeholder="请输入"/>
-                    </nz-form-control>
-        </nz-form-item>
+
 </ng-template>
 
 
 <ng-template #actionTpl2>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">OUI</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">厂商唯一识别码</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="oui" id="oui"
                         name="oui" placeholder="请输入"/>
                 </nz-form-control>
@@ -142,7 +143,7 @@
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
-                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">时间戳</nz-form-label>
+                    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="no">记录时间</nz-form-label>
                     <input style="width: 300px;" maxlength="20" nz-input [(ngModel)]="timestamp_f" id="timestamp_f"
                     name="timestamp_f" placeholder="请输入"/>
                 </nz-form-control>

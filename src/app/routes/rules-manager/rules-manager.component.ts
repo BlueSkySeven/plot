@@ -33,7 +33,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   undeleteIdAll:any[];
   deleteIdAll: any[];
   isSelectedAll:boolean;
-  currentIndex: 0;
+  currentIndex: number;
   itemDetail:{};
   dataList: [];
   dataAllList: any;
@@ -72,12 +72,12 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns1: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype" },
-    { title: "subtype", index: "subtype" },
-    { title: "indicator", index: "indicator" },
-    { title: "value_f", index: "value_f" },
-    { title: "uproto", index: "uproto" },
-    { title: "remark", index: "remark" },
+    { title: "规则类型", index: "ruletype" },
+    { title: "类则子类", index: "subtype" },
+    { title: "指示", index: "indicator" },
+    { title: "指示值", index: "value_f" },
+    { title: "上层协议", index: "uproto" },
+    { title: "备注", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -112,11 +112,11 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns2: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype" },
-    { title: "proto", index: "proto" },
-    { title: "key_", index: "key_" },
-    { title: "uproto", index: "uproto" },
-    { title: "remark", index: "remark" },
+    { title: "规则类型", index: "ruletype" },
+    { title: "协议", index: "proto" },
+    { title: "特征码", index: "key_" },
+    { title: "上层协议", index: "uproto" },
+    { title: "备注", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -149,13 +149,13 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns3: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype" },
-    { title: "proto", index: "proto" },
-    { title: "offset_f", index: "offset_f" },
-    { title: "length", index: "length" },
-    { title: "value_f", index: "value_f" },
-    { title: "uproto", index: "uproto" },
-    { title: "remark", index: "remark" },
+    { title: "规则类型", index: "ruletype" },
+    { title: "协议", index: "proto" },
+    { title: "偏移量", index: "offset_f" },
+    { title: "长度", index: "length" },
+    { title: "偏移值", index: "value_f" },
+    { title: "上层协议", index: "uproto" },
+    { title: "备注", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -190,10 +190,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns4: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype" },
-    { title: "subtype", index: "subtype" },
-    { title: "proto", index: "proto" },
-    { title: "remark", index: "remark" },
+    { title: "规则类型", index: "ruletype" },
+    { title: "类则子类", index: "subtype" },
+    { title: "协议", index: "proto" },
+    { title: "备注", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -225,12 +225,12 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   columns5: STColumn[] = [
     { title: '选框',index: 'id',type: 'checkbox'},
     { title: "编号", index: "id" },
-    { title: "ruletype", index: "ruletype"},
-    { title: "tuples", index: "tuples" },
-    { title: "group_f", index: "group_f" },
-    { title: "size", index: "size" },
-    { title: "path", index: "path" },
-    { title: "remark", index: "remark" },
+    { title: "规则类型", index: "ruletype"},
+    { title: "规则内容", index: "tuples" },
+    { title: "组合", index: "group_f" },
+    { title: "输出文件大小", index: "size" },
+    { title: "输出相对路径", index: "path" },
+    { title: "备注", index: "remark" },
     {
       title: "操作", index: "", "buttons": [
       {
@@ -551,14 +551,9 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     .subscribe(data => {
       this.dataAllList = data['data']
       if(!this.isHadloaded){
-        // if(data['data'].length == 0){
-        //   this.allType = []
-        //   this.selectType = ""
-        // }
-        // else{
-          this.allType = Object.keys(data['data'][0])
-          this.selectType = Object.keys(data['data'][0])[0]
-        // }
+          // this.allType = Object.keys(data['data'][0])
+          // this.selectType = Object.keys(data['data'][0])[0]
+        this.getAllSelectType()
         this.isHadloaded = true
       }
     }, error => {
@@ -949,7 +944,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       var link = document.getElementById("exportCsv");
       var blob = new Blob(["\uFEFF" + this.toCsv(this.dataList)], { type: 'text/xlsx;charset=utf-8;' });
       var date = new Date()
-      var time = date.getMonth() + "_" + date.getDate() + "_" + date.getHours() + "_" + date.getMinutes()
+      var time = (date.getMonth()+1) + "_" + date.getDate() + "_" + date.getHours() + "_" + date.getMinutes()
       var filename = "export_file_" + time + ".xlsx";
       link['download'] = filename;//这里替换为你需要的文件名
       link['href'] = URL.createObjectURL(blob);
@@ -957,8 +952,10 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
   }
   csvAdd(data : any){
     let _this = this
-    data.map(function(item){
-    try{
+    var success = 0
+    var fail = 0
+    var csvData = data
+    data.map(function(item,itemIndex){
       let dbname = {
         dbname:"rule_management"
       }
@@ -966,7 +963,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       let data:any = {}
       let tablename = ''
       for(let i =0;i<item.length;i++){
-        //???????????????????????????? remark=xx导入后会自动变成数字
+        //??????? remark=xx导入后会自动变成数字
         //xlsx 文件自身兼容性问题
         let arr = item[i].split("=")
         data[arr[0]] = arr[1] || ""
@@ -1017,7 +1014,7 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
           break;
         }
       }
-      console.log(isExist,"isExist");
+      //console.log(isExist,"isExist");
       if(isExist){//相同数据覆盖，不同数据则添加
         let paramR = {
           ...param,
@@ -1029,11 +1026,17 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
         .subscribe(data => {
           _this.isLoading = false;
           if (!data['affectedRows']) {
-            _this.message.error('覆盖失败');
+            fail++
+            if(itemIndex == csvData.length -1){
+              _this.message.info("成功："+success+"条；"+"失败："+fail+"条")
+            }
             return;
           }
-          _this.message.success('覆盖成功');
-          //_this.getList("query");
+          success++
+          console.log(success,"_this.success")
+          if(itemIndex == csvData.length -1){
+            _this.message.info("成功："+success+"条；"+"失败："+fail+"条")
+          }
         }, error => {
           _this.isLoading = false;
         })
@@ -1042,20 +1045,25 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       _this.proSrv.addInfoPost(UtilStatic.host+'addData', param)
       .subscribe(data => {
         if (!data['affectedRows']) {
-          _this.message.error("添加失败");
+          fail++
+          if(itemIndex == csvData.length -1){
+            _this.message.info("成功："+success+"条；"+"失败："+fail+"条")
+          }
+          return
         }
         else{
-        _this.message.success("添加成功");
+          success++
+          if(itemIndex == csvData.length -1){
+            _this.message.info("成功："+success+"条；"+"失败："+fail+"条")
+          }
         }
       }, error => {
         
       })
       }
-    }catch(e){
-      console.log(e)
-        _this.message.error("数据有误")
-      }
+
     })
+    
   }
   //导入csv
   onImportCsv(evt: any) {
@@ -1074,7 +1082,6 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
       /* save data */
       this.inputdata = (XLSX.utils.sheet_to_json(ws, {header: 1})); 
-      console.log(this.inputdata,"@@@")
       evt.target.value="" // 清空   
       this.csvAdd(this.inputdata)
       this.getList("query")
@@ -1082,13 +1089,68 @@ export class RulesManagerComponent implements OnInit, OnDestroy {
     this.isLoading = false
     reader.readAsBinaryString(target.files[0]);   
   }
-
+  getAllSelectType(){
+    switch (this.currentIndex) {
+      case 0:
+        this.allType = [
+          {value:"编号",key:"id"},
+          {value:"规则类型",key:"ruletype"},
+          {value:"类则子类",key:"subtype"},
+          {value:"指示",key:"indicator"},
+          {value:"指示值",key:"value_f"},
+          {value:"上层协议",key:"uproto"},
+          {value:"备注",key:"remark"},
+        ];
+        break;
+      case 1:
+        this.allType = [
+          {value:"编号",key:"id"},
+          {value:"规则类型",key:"ruletype"},
+          {value:"协议",key:"proto"},
+          {value:"特征码",key:"key_"},
+          {value:"上层协议",key:"uproto"},
+          {value:"备注",key:"remark"},
+        ];
+        break;
+      case 2:
+        this.allType = [
+          {value:"编号",key:"id"},
+          {value:"规则类型",key:"ruletype"},
+          {value:"协议",key:"proto"},
+          {value:"偏移量",key:"offset_f"},
+          {value:"长度",key:"length"},
+          {value:"偏移值",key:"value_f"},
+          {value:"上层协议",key:"uproto"},
+          {value:"备注",key:"remark"},
+        ];
+        break;
+      case 3:
+        this.allType = [
+          {value:"编号",key:"id"},
+          {value:"规则类型",key:"ruletype"},
+          {value:"类则子类",key:"subtype"},
+          {value:"协议",key:"proto"},
+          {value:"备注",key:"remark"},
+        ];
+        break;
+      default:
+        this.allType = [
+          {value:"编号",key:"id"},
+          {value:"规则类型",key:"ruletype"},
+          {value:"规则内容",key:"tuples"},
+          {value:"组合",key:"group_f"},
+          {value:"输出文件大小",key:"size"},
+          {value:"输出相对路径",key:"path"},
+          {value:"备注",key:"remark"},
+        ];
+        break;
+    }
+    this.selectType = "id"
+  }
   /**
    * 销毁订阅
    */
   ngOnDestroy(): void {
-    console.log(123123);
-
     this.eventContent.unsubscribe();
   }
 }

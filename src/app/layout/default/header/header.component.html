@@ -49,7 +49,7 @@
       <header-icon></header-icon>
     </li> -->
     <!-- Settings -->
-    <li class="hidden-mobile">
+    <!-- <li class="hidden-mobile">
       <div class="alain-default__nav-item" nz-dropdown [nzDropdownMenu]="settingsMenu" nzTrigger="click"
         nzPlacement="bottomRight">
         <i nz-icon nzType="setting"></i>
@@ -59,15 +59,18 @@
           <div nz-menu-item>
             <header-fullscreen></header-fullscreen>
           </div>
-          <!-- <div nz-menu-item>
+          <div nz-menu-item (click)="closeWindow()">
+            <i nz-icon nzType="close-circle"></i>关闭页面
+          </div>
+          <div nz-menu-item>
             <header-storage></header-storage>
           </div>
           <div nz-menu-item>
             <header-i18n></header-i18n>
-          </div> -->
+          </div>
         </div>
       </nz-dropdown-menu>
-    </li>
+    </li> -->
     <!-- <li class="hidden-mobile">
       <header-user></header-user>
     </li> -->

@@ -55,7 +55,7 @@
     "moment": "^2.24.0",
     "ng-alain": "8.4.0",
     "ng-zorro-antd": "8.3.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "particles.js": "^2.0.0",
     "rxjs": "~6.5.3",
     "screenfull": "^5.0.0",
